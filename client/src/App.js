@@ -56,7 +56,12 @@ class App extends Component {
     });
   }
   
-
+  handleKycSubmit = async () => {
+    const {kycAddress} = this.state;
+    await this.kycContract.methods.setKycCompleted(kycAddress).send({from: this.accounts[0]});
+    console.log(kycAddress);
+    alert("Account "+kycAddress+" is now whitelisted");
+  }
   
 
   render() {
@@ -68,8 +73,8 @@ class App extends Component {
         <h1>Capuccino Token for StarDucks</h1>
 
         <h2>Enable your accoount</h2>
-        Address to allow : <input tupe="text" name="kycAddress" value={this.state.kycAddress} />
-        <button type="button">Add Address to Whitelist</button>
+        Address to allow : <input tupe="text" name="kycAddress" value={this.state.kycAddress} onChange={this.handleInputChange}/>
+        <button type="button" onClick={this.handleKycSubmit}>Add Address to Whitelist</button>
         
       </div>
     );
