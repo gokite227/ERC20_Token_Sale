@@ -1,11 +1,13 @@
 import React, { Component } from "react";
-import CounterContract from "./contracts/Counter.json";
+import MyToken from "./contracts/MyToken.json";
+import MyTokenSale from "./contracts/MyTokenSale.json";
+import KycContract from "./contracts/KycContract.json";
 import getWeb3 from "./getWeb3";
 
 import "./App.css";
 
 class App extends Component {
-  state = {loaded:false, count: 0, accounts: null, contract: null };
+  state = { loaded: false, kycAddress: "0x123..." };
 
   componentDidMount = async () => {
     try {
@@ -18,8 +20,19 @@ class App extends Component {
       // Get the contract instance.
       this.networkId = await this.web3.eth.net.getId();
     
-       this.counter = new this.web3.eth.Contract(
-         CounterContract.abi,  CounterContract.networks[this.networkId] &&  CounterContract.networks[this.networkId].address
+      this.myToken = new this.web3.eth.Contract(
+        MyToken.abi,
+        MyToken.networks[this.networkId] && MyToken.networks[this.networkId].address,
+      );
+
+      this.myTokenSale = new this.web3.eth.Contract(
+        MyTokenSale.abi,
+        MyTokenSale.networks[this.networkId] && MyTokenSale.networks[this.networkId].address,
+      );
+
+      this.kycContract = new this.web3.eth.Contract(
+        KycContract.abi,
+        KycContract.networks[this.networkId] && KycContract.networks[this.networkId].address,
       );
 
       // Set web3, accounts, and contract to the state, and then proceed with an
@@ -34,32 +47,30 @@ class App extends Component {
     }
   };
 
-  runExample = async () => {
-    // Get the value from the contract to prove it worked.
-    const response = await this.counter.methods.ViewCount().call();
-    // Update state with the result.
-    this.setState({count: response})
-  };
-
-  handleIncrease = async() => {
-    await this.counter.methods.IncrementCount().send({ from: this.accounts[0] })
-    await this.runExample()
+  handleInputChange = (event) => {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value
+    });
   }
+  
 
-  handleReduce = async() => {
-    await this.counter.methods.DecrementCount().send({ from: this.accounts[0] })
-    await this.runExample()
-  }
+  
 
   render() {
     if (!this.state.loaded) {
-      return <div>Loading Count...</div>;
+      return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
       <div className="App">
-        <h1>Counts</h1>
-        <h2>{this.state.count}</h2>
-        <button onClick={this.handleIncrease}>Increment count</button><button onClick={this.handleReduce}>decrement count</button>
+        <h1>Capuccino Token for StarDucks</h1>
+
+        <h2>Enable your accoount</h2>
+        Address to allow : <input tupe="text" name="kycAddress" value={this.state.kycAddress} />
+        <button type="button">Add Address to Whitelist</button>
+        
       </div>
     );
   }
