@@ -9,7 +9,7 @@ module.exports = {
   contracts_build_directory: path.join(__dirname, "client/src/contracts"),
   networks: {
     development: {
-      port: 7545,
+      port: 8545,
       host : "127.0.0.1",
       network_id : 5777
     },
@@ -17,7 +17,13 @@ module.exports = {
       provider: function() {
         return new HDWalletProvider(process.env.MNEMONIC, "http://127.0.0.1:7545", MetaMaskAccountIndex )
       },
-      network_id: 5777
+      network_id: 1337,
+    },
+    goerli_local: {
+      provider: function() {
+        return new HDWalletProvider(process.env.MNEMONIC, "https://goerli.infura.io/v3/3876509ed81a411488549089b765ec18", MetaMaskAccountIndex)
+      },
+      network_id: 5,
     }
   },
   compilers: {
