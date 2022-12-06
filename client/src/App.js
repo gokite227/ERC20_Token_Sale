@@ -3,6 +3,8 @@ import MyToken from "./contracts/MyToken.json";
 import MyTokenSale from "./contracts/MyTokenSale.json";
 import KycContract from "./contracts/KycContract.json";
 import getWeb3 from "./getWeb3";
+import TokenBuy from "./components/TokenBuy";
+import AccountAdd from "./components/AccountAdd";
 
 import "./App.css";
 
@@ -65,7 +67,7 @@ class App extends Component {
   }
 
   handleBuyToken = async () => {
-    await this.myTokenSale.methods.buyTokens(this.accounts[0]).send({from: this.accounts[0], value: 1});
+    await this.myTokenSale.methods.buyTokens(this.accounts[0]).send({from: this.accounts[0], value: 1000000000000000 });
   }
 
   updateUserTokens = async () => {
@@ -84,17 +86,8 @@ class App extends Component {
     }
     return (
       <div className="App">
-        <h1>Capuccino Token for StarDucks</h1>
-
-        <h2>Enable your accoount</h2>
-        Address to allow : <input tupe="text" name="kycAddress" value={this.state.kycAddress} onChange={this.handleInputChange}/>
-        <button type="button" onClick={this.handleKycSubmit}>Add Address to Whitelist</button>
-        <h2>Buy Cappucino-Tokens</h2>
-        <p>Send Ether to this address: {this.state.tokenSaleAddress}</p>
-        <p>CAPPU address : {this.state.tokenAddress}</p>
-        <p>You have : {this.state.userTokens}</p>
-        <button type="button" onClick={this.handleBuyToken}>Buy more tokens</button>
-        
+        <AccountAdd kycAddress={this.state.kycAddress} handleInputChange={this.handleInputChange} handleKycSubmit={this.handleKycSubmit}/>
+        <TokenBuy tokenAddress={this.state.tokenSaleAddress} userTokens ={this.state.userTokens} handleBuyToken={this.handleBuyToken}/>
       </div>
     );
   }
