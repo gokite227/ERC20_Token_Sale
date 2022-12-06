@@ -1,6 +1,5 @@
-import React, { Component, ReactDOM } from "react";
+import React, { Component } from "react";
 
-import "./components/style.css";
 import MyToken from "./contracts/MyToken.json";
 import MyTokenSale from "./contracts/MyTokenSale.json";
 import KycContract from "./contracts/KycContract.json";
@@ -9,6 +8,7 @@ import TokenBuy from "./components/TokenBuy";
 import AccountAdd from "./components/AccountAdd";
 
 import "./App.css";
+import "./components/style.css";
 
 class App extends Component {
   state = { loaded: false, kycAddress: "0x123...", tokenSaleAddress: "", tokenAddress: "", userTokens: 0, page: true };
@@ -83,23 +83,15 @@ class App extends Component {
 
   
 
-
-
   render() {
     
     if (!this.state.loaded) {
-      return <div>Loading Web3, accounts, and contract...</div>;
+      return (
+        <div class="container">
+          <h2>Loading Web3, accounts, and contract...</h2>
+        </div>
+      );
     }
-    const changePageAdd = async () => {
-      this.state.page = true;
-      console.log(this.state.page);
-    }
-    const changePageBuy = async () => {
-      this.state.page = false;
-      console.log(this.state.page);
-    }
-
-    
     
     return (
       <div class="container1">

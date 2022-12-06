@@ -16,6 +16,10 @@
     font-size: 350%;
     
   }
+  h2{
+    color: white;
+    font-size: 250%;
+  }
   /* align items center vertically and horizontally  */
   .container{
     display: flex;
@@ -27,8 +31,9 @@
     padding: 2%;
     width: 40ww;
     height: 40wh;
-    background-color: rgba(41, 39, 39, 0.3);
+    background-color: rgba(41, 39, 39, 0.605);
     box-shadow: 5px 5px 30px black;
+    
   }
   .btn button {
     padding: 3px;
