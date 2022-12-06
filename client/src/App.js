@@ -1,4 +1,6 @@
-import React, { Component } from "react";
+import React, { Component, ReactDOM } from "react";
+
+import "./components/style.css";
 import MyToken from "./contracts/MyToken.json";
 import MyTokenSale from "./contracts/MyTokenSale.json";
 import KycContract from "./contracts/KycContract.json";
@@ -9,8 +11,8 @@ import AccountAdd from "./components/AccountAdd";
 import "./App.css";
 
 class App extends Component {
-  state = { loaded: false, kycAddress: "0x123...", tokenSaleAddress: "", tokenAddress:"", userTokens: 0 };
-
+  state = { loaded: false, kycAddress: "0x123...", tokenSaleAddress: "", tokenAddress: "", userTokens: 0, page: true };
+  
   componentDidMount = async () => {
     try {
       // Get network provider and web3 instance.
@@ -21,7 +23,7 @@ class App extends Component {
 
       // Get the contract instance.
       this.networkId = await this.web3.eth.net.getId();
-    
+
       this.myToken = new this.web3.eth.Contract(
         MyToken.abi,
         MyToken.networks[this.networkId] && MyToken.networks[this.networkId].address,
@@ -40,7 +42,7 @@ class App extends Component {
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
       this.listenToTokenTransfer();
-      this.setState({ loaded:true, tokenSaleAddress:this.myTokenSale._address, tokenAddress:this.myToken._address }, this.updateUserTokens);
+      this.setState({ loaded: true, tokenSaleAddress: this.myTokenSale._address, tokenAddress: this.myToken._address }, this.updateUserTokens);
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -58,36 +60,62 @@ class App extends Component {
       [name]: value
     });
   }
-  
+
   handleKycSubmit = async () => {
-    const {kycAddress} = this.state;
-    await this.kycContract.methods.setKycCompleted(kycAddress).send({from: this.accounts[0]});
+    const { kycAddress } = this.state;
+    await this.kycContract.methods.setKycCompleted(kycAddress).send({ from: this.accounts[0] });
     console.log(kycAddress);
-    alert("Account "+kycAddress+" is now whitelisted");
+    alert("Account " + kycAddress + " is now whitelisted");
   }
 
   handleBuyToken = async () => {
-    await this.myTokenSale.methods.buyTokens(this.accounts[0]).send({from: this.accounts[0], value: 1000000000000000 });
+    await this.myTokenSale.methods.buyTokens(this.accounts[0]).send({ from: this.accounts[0], value: 1000000000000000 });
   }
 
   updateUserTokens = async () => {
     let userTokens = await this.myToken.methods.balanceOf(this.accounts[0]).call();
-    this.setState({userTokens: userTokens});
+    this.setState({ userTokens: userTokens });
   }
 
-  listenToTokenTransfer = async() => {
-    this.myToken.events.Transfer({to: this.accounts[0]}).on("data", this.updateUserTokens);
+  listenToTokenTransfer = async () => {
+    this.myToken.events.Transfer({ to: this.accounts[0] }).on("data", this.updateUserTokens);
   }
+
   
 
+
+
   render() {
+    
     if (!this.state.loaded) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
+    const changePageAdd = async () => {
+      this.state.page = true;
+      console.log(this.state.page);
+    }
+    const changePageBuy = async () => {
+      this.state.page = false;
+      console.log(this.state.page);
+    }
+
+    
+    
     return (
-      <div className="App">
-        <AccountAdd kycAddress={this.state.kycAddress} handleInputChange={this.handleInputChange} handleKycSubmit={this.handleKycSubmit}/>
-        <TokenBuy tokenAddress={this.state.tokenSaleAddress} userTokens ={this.state.userTokens} handleBuyToken={this.handleBuyToken}/>
+      <div class="container1">
+      <div class="container">
+        <h1>Capuccino Token for StarDucks</h1>
+        <div class="form">
+          <div class="btn">
+            {/* <button class="signUpBtn" onClick={changePageAdd}>ADD Address</button>
+            <button class="loginBtn" onClick={changePageBuy}>BUY TOKEN</button> */}
+          </div>
+          <div id="page">
+            <AccountAdd kycAddress={this.state.kycAddress} handleInputChange={this.handleInputChange} handleKycSubmit={this.handleKycSubmit} />
+            <TokenBuy tokenAddress={this.state.tokenSaleAddress} userTokens={this.state.userTokens} handleBuyToken={this.handleBuyToken} />
+          </div>
+        </div>
+      </div>
       </div>
     );
   }
