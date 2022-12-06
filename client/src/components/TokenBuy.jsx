@@ -12,7 +12,7 @@ function TokenBuy({tokenAddress, userTokens, handleBuyToken}) {
             <p class="p3">Send Ether to this address: {tokenAddress}</p>
           </div>
           <div class="formGroup">
-            <p class="p2">You have : {userTokens}</p>
+            <p class="p2">You have : 10</p>
           </div>
           
           <div class="formGroup">
